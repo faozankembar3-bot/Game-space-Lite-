@@ -208,37 +208,106 @@
   }
   .terms a{color:#111315; text-decoration:underline;}
 
+  /* ===== DASHBOARD ===== */
   #dashboard{
     display:none;
     width:100%;
-    max-width:320px;
+    max-width:390px;
+    padding-bottom:40px;
+    animation: fadeUp .5s ease both;
   }
-  .dash-top{
+  .dash-header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:18px;
+    margin-bottom:24px;
   }
-  .dash-top span{font-size:12.5px; color:#5b6270;}
-  .dash-top strong{color:#111315;}
+  .dash-brand{ font-size:17px; font-weight:700; color:#111315; }
+  .dash-brand span{ color:#2f6bff; }
+  .dash-user{ display:flex; align-items:center; gap:8px; }
+  .avatar{
+    width:32px; height:32px; border-radius:50%;
+    background:#2f6bff; border:1.5px solid #111315;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700; color:#fff; flex-shrink:0;
+  }
+  .dash-username{
+    font-size:12.5px; color:#111315; font-weight:600;
+    max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
   .logout{
-    background:#2f6bff;
-    border:1.5px solid #111315;
-    color:#ffffff;
-    padding:7px 12px;
-    border-radius:6px;
-    font-size:11.5px;
-    cursor:pointer;
+    background:#fff; border:1.5px solid #111315; color:#111315;
+    padding:6px 11px; border-radius:6px; font-size:11.5px;
+    cursor:pointer; font-weight:600; transition: background .15s ease;
   }
-  .dash-empty{
-    background:#ffffff;
-    border-radius:12px;
-    padding:50px 18px;
-    text-align:center;
-    color:#8a909c;
-    font-size:12.5px;
-    box-shadow: 0 10px 30px rgba(17,19,21,0.10), 0 2px 8px rgba(17,19,21,0.06);
+  .logout:hover{ background:#f4f5f7; }
+
+  .dash-banner{
+    background:#2f6bff; border:1.5px solid #111315;
+    border-radius:12px; padding:18px 18px 16px;
+    margin-bottom:20px; position:relative; overflow:hidden;
   }
+  .dash-banner::before{
+    content:""; position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.13) 1.5px, transparent 1.5px);
+    background-size: 18px 18px;
+  }
+  .dash-banner h2{ font-size:16px; font-weight:700; color:#fff; position:relative; }
+  .dash-banner p{ font-size:12px; color:rgba(255,255,255,0.75); margin-top:4px; position:relative; }
+
+  .stats-row{
+    display:grid; grid-template-columns: repeat(3,1fr);
+    gap:10px; margin-bottom:20px;
+  }
+  .stat-card{
+    background:#fff; border:1.5px solid #111315;
+    border-radius:10px; padding:14px 10px;
+    box-shadow: 0 3px 10px rgba(17,19,21,0.07); text-align:center;
+  }
+  .stat-card .stat-val{ font-size:20px; font-weight:700; color:#111315; }
+  .stat-card .stat-label{
+    font-size:10px; color:#8a909c; margin-top:3px;
+    text-transform:uppercase; letter-spacing:0.04em;
+  }
+
+  .section-title{
+    font-size:11px; font-weight:700; color:#8a909c;
+    text-transform:uppercase; letter-spacing:0.07em; margin-bottom:10px;
+  }
+
+  .menu-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+  .menu-item{
+    background:#fff; border:1.5px solid #111315; border-radius:10px;
+    padding:13px 14px; display:flex; align-items:center; gap:12px;
+    box-shadow: 0 2px 8px rgba(17,19,21,0.06); cursor:pointer;
+    transition: box-shadow .2s ease, transform .1s ease;
+  }
+  .menu-item:hover{ box-shadow: 0 5px 16px rgba(17,19,21,0.11); }
+  .menu-item:active{ transform:scale(0.99); }
+  .menu-icon{
+    width:36px; height:36px; background:#eef3ff;
+    border:1.5px solid #c9d8ff; border-radius:8px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .menu-icon svg{ width:18px; height:18px; stroke:#2f6bff; fill:none; stroke-width:1.8; }
+  .menu-text{ flex:1; }
+  .menu-text strong{ display:block; font-size:13.5px; color:#111315; }
+  .menu-text span{ font-size:11.5px; color:#8a909c; }
+  .menu-arrow{ color:#c5cad4; font-size:18px; }
+
+  .profile-card{
+    background:#fff; border:1.5px solid #111315; border-radius:10px;
+    padding:16px 14px; box-shadow: 0 2px 8px rgba(17,19,21,0.06);
+    display:flex; align-items:center; gap:12px;
+  }
+  .avatar-lg{
+    width:44px; height:44px; border-radius:50%;
+    background:#2f6bff; border:1.5px solid #111315;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; font-weight:700; color:#fff; flex-shrink:0;
+  }
+  .profile-info strong{ display:block; font-size:14px; color:#111315; }
+  .profile-info span{ font-size:12px; color:#8a909c; }
 </style>
 </head>
 <body>
@@ -324,11 +393,99 @@
 </div>
 
 <div id="dashboard">
-  <div class="dash-top">
-    <span>Logged in as <strong id="whoami">—</strong></span>
-    <button type="button" class="logout" id="logoutBtn">Log out</button>
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="dash-brand">Game<span>Space</span> Lite</div>
+    <div class="dash-user">
+      <div class="avatar" id="avatarCircle">?</div>
+      <div class="dash-username" id="whoami">—</div>
+      <button type="button" class="logout" id="logoutBtn">Log out</button>
+    </div>
   </div>
-  <div class="dash-empty">Dashboard is empty.<br>Nothing here yet.</div>
+
+  <!-- Welcome banner -->
+  <div class="dash-banner">
+    <h2>Welcome back 👾</h2>
+    <p>Your game overlay is ready. Customize it below.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val">0</div>
+      <div class="stat-label">Games</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">0</div>
+      <div class="stat-label">Overlays</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">—</div>
+      <div class="stat-label">FPS Avg</div>
+    </div>
+  </div>
+
+  <!-- Menu -->
+  <div class="section-title">Quick Access</div>
+  <div class="menu-list">
+
+    <div class="menu-item">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div class="menu-text">
+        <strong>FPS Overlay</strong>
+        <span>Monitor frame rate in-game</span>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="menu-text">
+        <strong>Overheat Warning</strong>
+        <span>CPU & GPU temperature alerts</span>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <div class="menu-text">
+        <strong>UI Customizer</strong>
+        <span>Edit overlay layout & style</span>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      </div>
+      <div class="menu-text">
+        <strong>Network Monitor</strong>
+        <span>Ping & packet loss overlay</span>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>
+
+  </div>
+
+  <!-- Profile -->
+  <div class="section-title">Account</div>
+  <div class="profile-card">
+    <div class="avatar-lg" id="avatarLg">?</div>
+    <div class="profile-info">
+      <strong id="profileName">—</strong>
+      <span id="profileEmail">—</span>
+    </div>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -376,10 +533,17 @@
       el.className = 'status show ' + type;
     }
 
-    function showDashboard(label){
+    function showDashboard(user){
       loginView.style.display='none';
       dashboard.style.display='block';
-      whoami.textContent = label;
+      const name = (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.username)) || user.email || 'User';
+      const email = user.email || '';
+      const initial = name.charAt(0).toUpperCase();
+      document.getElementById('whoami').textContent = name.split(' ')[0];
+      document.getElementById('avatarCircle').textContent = initial;
+      document.getElementById('avatarLg').textContent = initial;
+      document.getElementById('profileName').textContent = name;
+      document.getElementById('profileEmail').textContent = email;
     }
     function showLogin(){
       dashboard.style.display='none';
@@ -389,9 +553,7 @@
     // Detect session - termasuk setelah redirect dari Google OAuth
     supabase.auth.onAuthStateChange((event, session) => {
       if (session && session.user){
-        const u = session.user;
-        const label = u.email || (u.user_metadata && u.user_metadata.full_name) || (u.user_metadata && u.user_metadata.username) || 'User';
-        showDashboard(label);
+        showDashboard(session.user);
       } else if (event === 'SIGNED_OUT'){
         showLogin();
       }
@@ -399,11 +561,7 @@
 
     // Cek session yang sudah ada saat halaman pertama dibuka
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session){
-        const u = data.session.user;
-        const label = u.email || (u.user_metadata && u.user_metadata.full_name) || (u.user_metadata && u.user_metadata.username) || 'User';
-        showDashboard(label);
-      }
+      if (data.session){ showDashboard(data.session.user); }
     });
 
     document.getElementById('signinBtn').addEventListener('click', async ()=>{
@@ -414,7 +572,7 @@
       setStatus(statusEl,'Signing in…','info');
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error){ setStatus(statusEl, error.message, 'error'); return; }
-      showDashboard(data.user.email);
+      showDashboard(data.user);
     });
 
     document.getElementById('forgotLink').addEventListener('click', async (e)=>{
@@ -450,7 +608,7 @@
       });
       if (error){ setStatus(statusEl, error.message, 'error'); return; }
       if (data.session){
-        showDashboard(data.user.email);
+        showDashboard(data.user);
       } else {
         setStatus(statusEl,'Account created! Check your email to verify before logging in.','ok');
       }
