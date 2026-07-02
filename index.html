@@ -386,11 +386,22 @@
       loginView.style.display='block';
     }
 
-    // Restore session kalau sudah pernah login
+    // Detect session - termasuk setelah redirect dari Google OAuth
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session && session.user){
+        const u = session.user;
+        const label = u.email || (u.user_metadata && u.user_metadata.full_name) || (u.user_metadata && u.user_metadata.username) || 'User';
+        showDashboard(label);
+      } else if (event === 'SIGNED_OUT'){
+        showLogin();
+      }
+    });
+
+    // Cek session yang sudah ada saat halaman pertama dibuka
     supabase.auth.getSession().then(({ data }) => {
       if (data.session){
         const u = data.session.user;
-        const label = u.email || (u.user_metadata && u.user_metadata.username) || 'User';
+        const label = u.email || (u.user_metadata && u.user_metadata.full_name) || (u.user_metadata && u.user_metadata.username) || 'User';
         showDashboard(label);
       }
     });
@@ -465,4 +476,3 @@
 </script>
 </body>
 </html>
-
