@@ -1,0 +1,7 @@
+[build]
+  publish = "."    # deploy semua file di root repo
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
