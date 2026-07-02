@@ -164,19 +164,39 @@
   }
 
   function runDashboard(supabase){
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session){
-        // Belum login, kembalikan ke halaman login
-        window.location.href = 'index.html';
-        return;
-      }
-      fillUser(data.session.user);
+    let resolved = false;
+
+    function showDash(user){
+      if (resolved) return;
+      resolved = true;
+      fillUser(user);
       document.getElementById('loading').style.display = 'none';
       document.getElementById('dashWrap').style.display = 'block';
+    }
+
+    function goLogin(){
+      if (resolved) return;
+      resolved = true;
+      window.location.href = 'index.html';
+    }
+
+    // onAuthStateChange menangkap hash token dari Google OAuth redirect
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        showDash(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        window.location.href = 'index.html';
+      }
     });
 
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') window.location.href = 'index.html';
+    // Fallback: cek session biasa (untuk email login)
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        showDash(data.session.user);
+      } else {
+        // Beri waktu onAuthStateChange proses hash token dulu
+        setTimeout(() => { if (!resolved) goLogin(); }, 3000);
+      }
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async ()=>{
